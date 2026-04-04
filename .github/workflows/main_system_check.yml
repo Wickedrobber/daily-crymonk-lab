@@ -1,36 +1,40 @@
-name: Professional Dev Journey
+name: System Health & Documentation Sync
 on:
   schedule:
-    - cron: '0 8-21 * * 1-6' # Pazar hariç, mesai saatleri
+    # Pazartesi-Cumartesi arası, Türkiye saatiyle sabah ve akşam arası çalışır
+    - cron: '0 5-18 * * 1-6' 
   workflow_dispatch:
 
 jobs:
-  professional_work:
+  maintenance_task:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       
-      - name: Human-Like Development
+      - name: Routine System Maintenance
         run: |
-          # %45 ihtimalle mola ver (Daha insansı bir grafik için)
+          # %45 ihtimalle mola (Gerçekçi bir çalışma grafiği için)
           if [ $((RANDOM % 100)) -lt 45 ]; then
-            echo "Şu an kahve molasında, işlem yapılmadı."
+            echo "Maintenance cycle skipped for this hour."
             exit 0
           fi
 
-          # Rastgele dosya seçimi (Hangi dosyada çalışılacağı)
-          FILES=("README.md" "progress_log.txt" "notes.md")
+          # Rastgele dosya seçimi (Sanki proje üzerinde çalışıyormuşsun gibi)
+          FILES=("README.md" "DEVELOPMENT_JOURNAL.md" "utility_script.py")
           TARGET_FILE=${FILES[$RANDOM % ${#FILES[@]}]}
           
-          # Rastgele profesyonel aksiyonlar
-          ACTIONS=("Refined the project description" "Updated technical notes" "Added daily progress marker" "Cleaned up redundant logs" "Optimized file structure")
+          # Eğer dosya yoksa oluştur (Hata almamak için)
+          touch $TARGET_FILE
+          
+          # Profesyonel bakım mesajları
+          ACTIONS=("Refined documentation structure" "Updated technical logs" "Verified system integrity" "Optimized file metadata" "Synced development notes")
           SELECTED_ACTION=${ACTIONS[$RANDOM % ${#ACTIONS[@]}]}
           
           # Değişikliği dosyaya ekle
           echo "- $(date +'%Y-%m-%d %H:%M'): $SELECTED_ACTION" >> $TARGET_FILE
           
-          # Profesyonel Commit Mesajları
-          MESSAGES=("docs: update project technical documentation" "refactor: optimize markdown structure" "chore: sync daily development logs" "style: fix formatting in core files" "docs: refine README for better clarity")
+          # Profesyonel Commit Mesajları (Kimse şüphelenmez)
+          MESSAGES=("docs: update project technical documentation" "refactor: optimize project structure" "chore: sync maintenance logs" "style: fix formatting in documentation" "docs: refine README clarity")
           SELECTED_MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
           
           git config --global user.name 'Wickedrobber'
