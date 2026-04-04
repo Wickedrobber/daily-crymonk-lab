@@ -1,24 +1,40 @@
-name: Daily Developer Progress
+name: Professional Dev Journey
 on:
   schedule:
-    # Günde 10 kez farklı saatlerde (Türkiye saatiyle yaklaşık 11:00 - 23:00 arası)
-    - cron: '0 8,9,10,11,13,14,15,16,17,20 * * *'
-  workflow_dispatch: # İstediğinde manuel çalıştırmak için
+    - cron: '0 8-21 * * 1-6' # Pazar hariç, mesai saatleri
+  workflow_dispatch:
 
 jobs:
-  update_logs:
+  professional_work:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       
-      - name: Generate Meaningful Progress
+      - name: Human-Like Development
         run: |
-          MESSAGES=("docs: update project documentation" "feat: improve error handling logic" "refactor: optimize code structure" "style: fix formatting in main files" "test: add unit tests for core modules" "perf: enhance application performance" "chore: update dependencies" "fix: resolve minor bug in data processing" "docs: add technical specifications" "feat: implement new utility functions")
+          # %45 ihtimalle mola ver (Daha insansı bir grafik için)
+          if [ $((RANDOM % 100)) -lt 45 ]; then
+            echo "Şu an kahve molasında, işlem yapılmadı."
+            exit 0
+          fi
+
+          # Rastgele dosya seçimi (Hangi dosyada çalışılacağı)
+          FILES=("README.md" "progress_log.txt" "notes.md")
+          TARGET_FILE=${FILES[$RANDOM % ${#FILES[@]}]}
+          
+          # Rastgele profesyonel aksiyonlar
+          ACTIONS=("Refined the project description" "Updated technical notes" "Added daily progress marker" "Cleaned up redundant logs" "Optimized file structure")
+          SELECTED_ACTION=${ACTIONS[$RANDOM % ${#ACTIONS[@]}]}
+          
+          # Değişikliği dosyaya ekle
+          echo "- $(date +'%Y-%m-%d %H:%M'): $SELECTED_ACTION" >> $TARGET_FILE
+          
+          # Profesyonel Commit Mesajları
+          MESSAGES=("docs: update project technical documentation" "refactor: optimize markdown structure" "chore: sync daily development logs" "style: fix formatting in core files" "docs: refine README for better clarity")
           SELECTED_MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
-          echo "Progress Update: $(date +'%Y-%m-%d %H:%M') - Task completed." >> progress_log.txt
           
           git config --global user.name 'Wickedrobber'
           git config --global user.email 'action@github.com'
-          git add progress_log.txt
+          git add .
           git commit -m "$SELECTED_MSG"
           git push
