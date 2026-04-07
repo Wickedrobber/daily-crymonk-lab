@@ -1,15 +1,17 @@
 name: System Health & Documentation Sync
 on:
   schedule:
-    # Pazartesi-Cumartesi arası, Türkiye saatiyle sabah ve akşam arası çalışır
+    # Pazartesi-Cumartesi arası çalışır
     - cron: '0 5-18 * * 1-6' 
   workflow_dispatch:
 
 jobs:
   maintenance_task:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # GitHub'a yazma izni verdik
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4 # En güncel versiyona yükselttik
       
       - name: Routine System Maintenance
         run: |
@@ -19,26 +21,29 @@ jobs:
             exit 0
           fi
 
-          # Rastgele dosya seçimi (Sanki proje üzerinde çalışıyormuşsun gibi)
+          # Rastgele dosya seçimi
           FILES=("README.md" "DEVELOPMENT_JOURNAL.md" "utility_script.py")
           TARGET_FILE=${FILES[$RANDOM % ${#FILES[@]}]}
           
-          # Eğer dosya yoksa oluştur (Hata almamak için)
+          # Eğer dosya yoksa oluştur
           touch $TARGET_FILE
           
           # Profesyonel bakım mesajları
           ACTIONS=("Refined documentation structure" "Updated technical logs" "Verified system integrity" "Optimized file metadata" "Synced development notes")
           SELECTED_ACTION=${ACTIONS[$RANDOM % ${#ACTIONS[@]}]}
           
-          # Değişikliği dosyaya ekle
-          echo "- $(date +'%Y-%m-%d %H:%M'): $SELECTED_ACTION" >> $TARGET_FILE
+          # KRİTİK DÜZELTME: Her zaman benzersiz bir satır ekle (GitHub sayması için)
+          echo "- $(date +'%Y-%m-%d %H:%M:%S'): $SELECTED_ACTION" >> $TARGET_FILE
           
-          # Profesyonel Commit Mesajları (Kimse şüphelenmez)
+          # Profesyonel Commit Mesajları
           MESSAGES=("docs: update project technical documentation" "refactor: optimize project structure" "chore: sync maintenance logs" "style: fix formatting in documentation" "docs: refine README clarity")
           SELECTED_MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
           
+          # KİMLİK DÜZELTMESİ (Burayı mutlaka kendi bilgilerine göre doldur!)
           git config --global user.name 'Wickedrobber'
-          git config --global user.email 'action@github.com'
+          git config --global user.email 'intibak23@hotmail.com' # Örn: adin@gmail.com
+          
           git add .
-          git commit -m "$SELECTED_MSG"
-          git push
+          
+          # Eğer değişiklik yoksa hata verme (Empty commit engelleme)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "$SELECTED_MSG" && git push)
